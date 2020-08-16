@@ -18,11 +18,18 @@ User(user, Me, )
 Cloud(aws,AWS,) {
     InternetGateway(igw, igw, )
     VirtualPrivateCloudVPC(vpc, VPC, 10.0.0.0/16) {
-        VPCRouter(router, Router, "local: 10.0.0.0/16, igw: 0.0.0.0/0")
+        VPCRouter(router, Router, )
         VPCSubnetPublic(subnet_public, Subnet, 10.0.0.0/24) {
             EC2(ec2, EC2, "local: 10.0.0.6, public: 198.51.100.2")
         }
+    }
 }
+
+note right of subnet_public
+Custom route table
+* local: 10.0.0.0/16
+* igw: 0.0.0.0/0
+end note
 
 user -> igw: HTTP[80, 443]
 user -> igw: SSH[22]
