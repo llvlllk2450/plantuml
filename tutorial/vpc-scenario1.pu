@@ -1,0 +1,32 @@
+@startuml
+
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/master/dist
+!includeurl AWSPuml/AWSCommon.puml
+
+!includeurl AWSPuml/General/User.puml
+!includeurl AWSPuml/GroupIcons/Cloud.puml
+!includeurl AWSPuml/General/InternetGateway.puml
+!includeurl AWSPuml/GroupIcons/VirtualPrivateCloudVPC.puml
+!includeurl AWSPuml/GroupIcons/VPCSubnetPublic.puml
+!includeurl AWSPuml/NetworkingAndContentDelivery/VPCRouter.puml
+!includeurl AWSPuml/Compute/EC2.puml
+
+!includeurl AWSPuml/AWSSimplified.puml
+
+' VPC with a single public subnet
+User(user, Me, )
+Cloud(aws,AWS,) {
+    InternetGateway(igw, igw, )
+    VirtualPrivateCloudVPC(vpc, VPC, 10.0.0.0/16) {
+        VPCRouter(router, Router, "local: 10.0.0.0/16, igw: 0.0.0.0/0")
+        VPCSubnetPublic(subnet_public, Subnet, 10.0.0.0/24) {
+            EC2(ec2, EC2, "local: 10.0.0.6, public: 198.51.100.2")
+        }
+}
+
+user -> igw: HTTP[80, 443]
+user -> igw: SSH[22]
+router - ec2
+igw - router
+
+@enduml
